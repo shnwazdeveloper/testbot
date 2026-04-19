@@ -1,0 +1,39 @@
+# render.yaml — Render deployment configuration
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: telegram-info-bot
+    runtime: node
+    region: oregon          # Change to: frankfurt, singapore, ohio if needed
+    plan: free              # free | starter | standard | pro
+
+    # Build settings
+    buildCommand: npm install
+    startCommand: npm start
+
+    # Health check — Render pings this to verify the service is alive
+    healthCheckPath: /
+
+    # Auto-deploy on push to main branch
+    autoDeploy: true
+
+    # Environment variables
+    # Set these in the Render dashboard → Environment tab
+    # or add them here as envVarGroups (not recommended for secrets)
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      - key: PORT
+        generateValue: false   # Render injects PORT automatically
+
+      # ⚠️  Set these in the Render Dashboard — do NOT hardcode secrets here
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false            # means: set manually in dashboard
+
+      - key: MONGODB_URI
+        sync: false            # means: set manually in dashboard
+
+      - key: ADMIN_ID
+        sync: false            # optional
